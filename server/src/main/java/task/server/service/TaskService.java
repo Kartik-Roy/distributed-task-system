@@ -90,6 +90,7 @@ public class TaskService {
 
     public ResponseEntity<?> reassignTaskToDifferentNode(String taskId, String nodeId){
         Task task=taskRepository.findByTaskId(taskId).orElseThrow();
+        task.setStatus(TaskStatus.pending);
         task.setAssignedNodeId(nodeId);
         task.setUpdatedOn(LocalDateTime.now());
         taskRepository.save(task);
@@ -104,6 +105,7 @@ public class TaskService {
         List<Task> taskList=taskRepository.findAllByAssignedNodeIdAndStatusNot(oldNodeId,TaskStatus.completed);
 
         taskList.forEach(task -> {
+            task.setStatus(TaskStatus.pending);
             task.setAssignedNodeId(newNodeId);
             task.setUpdatedOn(LocalDateTime.now());
         });
