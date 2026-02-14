@@ -304,10 +304,14 @@ Invalid status update
 
 ## 4. Error Scenarios
 
+> These apply to **any** authenticated endpoint (admin or node).
+
 ### 4.1 No Authorization Header
 
 ```bash
-curl -X GET http://localhost:8080/task/getAllForNode
+curl -X POST http://localhost:8080/task/create \
+  -H "Content-Type: application/json" \
+  -d '{"taskType":"DATA_EXPORT","taskDetails":"test","assignedNodeId":"3"}'
 ```
 
 **Response:** `401 Unauthorized`
@@ -317,8 +321,10 @@ curl -X GET http://localhost:8080/task/getAllForNode
 ### 4.2 Expired / Invalid Token
 
 ```bash
-curl -X GET http://localhost:8080/task/getAllForNode \
-  -H "Authorization: Bearer invalid.token.here"
+curl -X POST http://localhost:8080/task/create \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer invalid.token.here" \
+  -d '{"taskType":"DATA_EXPORT","taskDetails":"test","assignedNodeId":"3"}'
 ```
 
 **Response:** `401 Unauthorized`
