@@ -118,6 +118,8 @@ To run multiple workers, change the `nodeId` and `nodeSecret` for each instance.
 |---|---|---|---|
 | `POST` | `/auth/login` | None | Admin/user login → JWT |
 | `POST` | `/auth/login/node` | None | Node login → JWT |
+| `POST` | `/node/create` | Admin JWT | Register a new worker node |
+| `POST` | `/user/create` | Admin JWT | Register a new admin/user |
 | `POST` | `/task/create` | Admin JWT | Create a new task assigned to a node |
 | `GET` | `/task/getByTaskId?taskId=` | Node JWT | Get task (only if assigned to requesting node) |
 | `GET` | `/task/user/getAllForNode?nodeId=` | Admin JWT | Get all tasks for a specific node (admin view) |
@@ -155,9 +157,13 @@ distributed-task-system/
 │       │   └── KafkaProducerConfig   # Kafka producer (idempotent, acks=all)
 │       ├── controller/
 │       │   ├── AuthController        # /auth/login, /auth/login/node
+│       │   ├── NodeController        # /node/create
+│       │   ├── UserController        # /user/create
 │       │   └── TaskController        # /task/** CRUD + reassign
 │       ├── dto/
+│       │   ├── CreateNodeDto
 │       │   ├── CreateTaskDto
+│       │   ├── CreateUserDto
 │       │   ├── GetTaskDto
 │       │   ├── NodeLoginRequestDto
 │       │   ├── NodeLoginResponseDto

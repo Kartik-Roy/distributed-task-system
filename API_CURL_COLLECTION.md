@@ -88,9 +88,40 @@ curl -X POST http://localhost:8080/auth/login/node \
 
 ---
 
-## 2. Task Operations (Admin — requires User/Admin JWT)
+## 2. Registration (Admin — requires User/Admin JWT)
 
-### 2.1 Create Task — DATA_EXPORT
+### 2.1 Create a New Worker Node
+
+```bash
+curl -X POST http://localhost:8080/node/create \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <ADMIN_TOKEN>" \
+  -d '{
+    "nodeId": "5",
+    "nodeSecretHash": "node5Secret"
+  }'
+```
+
+---
+
+### 2.2 Create a New User
+
+```bash
+curl -X POST http://localhost:8080/user/create \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <ADMIN_TOKEN>" \
+  -d '{
+    "username": "new.admin@explorisin",
+    "password": "securePass123",
+    "role": "admin"
+  }'
+```
+
+---
+
+## 3. Task Operations (Admin — requires User/Admin JWT)
+
+### 3.1 Create Task — DATA_EXPORT
 
 ```bash
 curl -X POST http://localhost:8080/task/create \
@@ -118,7 +149,7 @@ curl -X POST http://localhost:8080/task/create \
 
 ---
 
-### 2.2 Create Task — EMAIL_SEND
+### 3.2 Create Task — EMAIL_SEND
 
 ```bash
 curl -X POST http://localhost:8080/task/create \
@@ -133,7 +164,7 @@ curl -X POST http://localhost:8080/task/create \
 
 ---
 
-### 2.3 Create Task — PDF_GENERATE
+### 3.3 Create Task — PDF_GENERATE
 
 ```bash
 curl -X POST http://localhost:8080/task/create \
@@ -148,7 +179,7 @@ curl -X POST http://localhost:8080/task/create \
 
 ---
 
-### 2.4 Reassign Single Task to Different Node
+### 3.4 Reassign Single Task to Different Node
 
 ```bash
 curl -X PUT "http://localhost:8080/task/reassignTask?taskId=07ab191c-057d-4331-a3a4-e6246f4ff2650&nodeId=2" \
@@ -170,7 +201,7 @@ curl -X PUT "http://localhost:8080/task/reassignTask?taskId=07ab191c-057d-4331-a
 
 ---
 
-### 2.5 Reassign All Tasks from One Node to Another
+### 3.5 Reassign All Tasks from One Node to Another
 
 ```bash
 curl -X PUT "http://localhost:8080/task/reassignAllForNode?oldNodeId=3&newNodeId=4" \
@@ -184,7 +215,7 @@ OK
 
 ---
 
-### 2.6 Get All Tasks for a Specific Node (Admin)
+### 3.6 Get All Tasks for a Specific Node (Admin)
 
 ```bash
 curl -X GET "http://localhost:8080/task/user/getAllForNode?nodeId=3" \
@@ -206,9 +237,9 @@ curl -X GET "http://localhost:8080/task/user/getAllForNode?nodeId=3" \
 
 ---
 
-## 3. Task Operations (Node — requires Node JWT)
+## 4. Task Operations (Node — requires Node JWT)
 
-### 3.1 Get Task by Task ID (Node-scoped)
+### 4.1 Get Task by Task ID (Node-scoped)
 
 > Only returns the task if it is assigned to the requesting node.
 
@@ -241,7 +272,7 @@ curl -X GET "http://localhost:8080/task/getByTaskId?taskId=07ab191c-057d-4331-a3
 
 ---
 
-### 3.2 Get All Tasks for This Node
+### 4.2 Get All Tasks for This Node
 
 > Returns all tasks assigned to the requesting node (node ID extracted from JWT).
 
@@ -272,7 +303,7 @@ curl -X GET http://localhost:8080/task/node/getAllForNode \
 
 ---
 
-### 3.3 Update Task Status — pending → in_progress
+### 4.3 Update Task Status — pending → in_progress
 
 ```bash
 curl -X PUT "http://localhost:8080/task/updateStatus?taskId=07ab191c-057d-4331-a3a4-e6246f4ff2650&oldStatus=pending&newStatus=in_progress" \
@@ -294,7 +325,7 @@ curl -X PUT "http://localhost:8080/task/updateStatus?taskId=07ab191c-057d-4331-a
 
 ---
 
-### 3.4 Update Task Status — in_progress → completed
+### 4.4 Update Task Status — in_progress → completed
 
 ```bash
 curl -X PUT "http://localhost:8080/task/updateStatus?taskId=07ab191c-057d-4331-a3a4-e6246f4ff2650&oldStatus=in_progress&newStatus=completed" \
@@ -303,7 +334,7 @@ curl -X PUT "http://localhost:8080/task/updateStatus?taskId=07ab191c-057d-4331-a
 
 ---
 
-### 3.5 Update Task Status — in_progress → failed
+### 4.5 Update Task Status — in_progress → failed
 
 ```bash
 curl -X PUT "http://localhost:8080/task/updateStatus?taskId=07ab191c-057d-4331-a3a4-e6246f4ff2650&oldStatus=in_progress&newStatus=failed" \
@@ -312,7 +343,7 @@ curl -X PUT "http://localhost:8080/task/updateStatus?taskId=07ab191c-057d-4331-a
 
 ---
 
-### 3.6 Attempt Invalid Status Update — completed → in_progress (BLOCKED)
+### 4.6 Attempt Invalid Status Update — completed → in_progress (BLOCKED)
 
 ```bash
 curl -X PUT "http://localhost:8080/task/updateStatus?taskId=07ab191c-057d-4331-a3a4-e6246f4ff2650&oldStatus=completed&newStatus=in_progress" \
@@ -326,7 +357,7 @@ Invalid status update
 
 ---
 
-## 4. Error Scenarios
+## 5. Error Scenarios
 
 > These apply to **any** authenticated endpoint (admin or node).
 

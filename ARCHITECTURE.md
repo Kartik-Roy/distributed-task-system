@@ -74,6 +74,8 @@ graph TB
 | Component | Class | Responsibility |
 |---|---|---|
 | **Auth Controller** | `AuthController` | User login (`/auth/login`) and node login (`/auth/login/node`) |
+| **Node Controller** | `NodeController` | Register new worker nodes (`/node/create`) |
+| **User Controller** | `UserController` | Register new admin/users (`/user/create`) |
 | **Task Controller** | `TaskController` | CRUD + status update + reassignment APIs under `/task/**`. Separate endpoints for admin (`/task/user/getAllForNode`) and node (`/task/node/getAllForNode`) task listing |
 | **Task Service** | `TaskService` | Business logic: create tasks, ownership-scoped fetch, idempotent status updates, reassignment |
 | **Auth Service** | `AuthService` | Validates credentials (BCrypt), mints JWT tokens via `JwtService` |
