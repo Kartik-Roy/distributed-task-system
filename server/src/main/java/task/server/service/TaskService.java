@@ -66,7 +66,28 @@ public class TaskService {
         return ResponseEntity.status(HttpStatus.OK).body(getTaskDto);
     }
 
-    public ResponseEntity<?> getAllTaskForNode(){
+    public ResponseEntity<?> userGetAllTaskForNode(String nodeId){
+        List<Task> taskList=taskRepository.findAllByAssignedNodeId(nodeId);
+
+        List<GetTaskDto> getTaskDtoList=new ArrayList<>();
+
+        taskList.forEach(task->{
+            GetTaskDto getTaskDto= GetTaskDto.builder()
+                    .taskId(task.getTaskId())
+                    .taskType(task.getTaskType())
+                    .taskDetails(task.getTaskDetails())
+                    .assignedNodeId(task.getAssignedNodeId())
+                    .status(task.getStatus().name())
+                    .build();
+            getTaskDtoList.add(getTaskDto);
+        });
+
+
+
+        return ResponseEntity.status(HttpStatus.OK).body(getTaskDtoList);
+    }
+
+    public ResponseEntity<?> nodeGetAllTaskForNode(){
         String nodeId = ((NodeAuthentication) SecurityContextHolder.getContext().getAuthentication()).nodeId();
         List<Task> taskList=taskRepository.findAllByAssignedNodeId(nodeId);
 

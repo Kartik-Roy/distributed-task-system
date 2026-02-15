@@ -50,7 +50,6 @@ public class AuthService {
             throw new ResponseStatusException(UNAUTHORIZED, "Node disabled");
         }
 
-        // IMPORTANT: nodeSecretHash must exist in DB (BCrypt hash)
         if (!encoder.matches(nodeSecret, node.getNodeSecretHash())) {
             throw new ResponseStatusException(UNAUTHORIZED, "Invalid credentials");
         }

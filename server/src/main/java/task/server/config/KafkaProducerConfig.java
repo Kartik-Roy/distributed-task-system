@@ -29,8 +29,6 @@ public class KafkaProducerConfig {
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
 
-
-        // decent defaults
         props.put(ProducerConfig.ACKS_CONFIG, "all");
         props.put(ProducerConfig.RETRIES_CONFIG, 5);
         props.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true);
@@ -45,7 +43,6 @@ public class KafkaProducerConfig {
         return new KafkaTemplate<>(pf);
     }
 
-    // Needed to create topics programmatically
     @Bean
     public KafkaAdmin kafkaAdmin() {
         Map<String, Object> cfg = new HashMap<>();

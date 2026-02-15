@@ -10,7 +10,6 @@ public class TaskExecutor {
     private String nodeId;
 
     public String execute(String taskType, String taskDetailsJson) {
-        // Keep it simple: real logic goes here
         return switch (taskType) {
             case "EMAIL_SEND" -> doEmail(taskDetailsJson);
             case "PDF_GENERATE" -> doPdf(taskDetailsJson);

@@ -27,7 +27,6 @@ public class TokenManager {
     }
 
     public String getValidToken() {
-        // refresh 60 seconds before expiry
         if (accessToken == null || expiringOn == null || expiringOn.minusSeconds(60).isBefore(LocalDateTime.now())) {
             login();
         }
@@ -35,7 +34,6 @@ public class TokenManager {
     }
 
     public synchronized void login() {
-        // double-check inside synchronized
         if (accessToken != null && expiringOn != null && expiringOn.minusSeconds(60).isAfter(LocalDateTime.now())) {
             return;
         }
@@ -56,10 +54,8 @@ public class TokenManager {
 
         this.accessToken = resp.get("accessToken").toString();
 
-        // server returns expiringOn, parse it (assumes ISO string)
         Object exp = resp.get("expiringOn");
         if (exp == null) {
-            // fallback: assume 55 mins if server didn't send it (not ideal)
             this.expiringOn = LocalDateTime.now().plusMinutes(55);
         } else {
             this.expiringOn = LocalDateTime.parse(exp.toString());

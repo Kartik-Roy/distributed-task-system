@@ -74,7 +74,7 @@ graph TB
 | Component | Class | Responsibility |
 |---|---|---|
 | **Auth Controller** | `AuthController` | User login (`/auth/login`) and node login (`/auth/login/node`) |
-| **Task Controller** | `TaskController` | CRUD + status update + reassignment APIs under `/task/**` |
+| **Task Controller** | `TaskController` | CRUD + status update + reassignment APIs under `/task/**`. Separate endpoints for admin (`/task/user/getAllForNode`) and node (`/task/node/getAllForNode`) task listing |
 | **Task Service** | `TaskService` | Business logic: create tasks, ownership-scoped fetch, idempotent status updates, reassignment |
 | **Auth Service** | `AuthService` | Validates credentials (BCrypt), mints JWT tokens via `JwtService` |
 | **JWT Service** | `JwtService` | Mints & parses JWT tokens (HS256). Separate claims for `node` vs `user` types |
@@ -127,7 +127,7 @@ sequenceDiagram
     Server-->>Node: {accessToken, expiringOn}
 
     Note over Node,Server: Authorized API Call
-    Node->>Server: GET /task/getAllForNode<br/>Authorization: Bearer <JWT>
+    Node->>Server: GET /task/node/getAllForNode<br/>Authorization: Bearer <JWT>
     Server->>Server: JwtAuthFilter extracts nodeId from JWT
     Server->>Server: Sets NodeAuthentication in SecurityContext
     Server->>DB: SELECT * FROM task WHERE assigned_node_id = <nodeId>

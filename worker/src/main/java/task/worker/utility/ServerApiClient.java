@@ -49,7 +49,6 @@ public class ServerApiClient {
         try {
             return doCall(url, method, body, respType);
         } catch (HttpClientErrorException.Unauthorized e) {
-            // re-login once
             tokenManager.invalidate();
             tokenManager.login();
             return doCall(url, method, body, respType);
@@ -71,6 +70,5 @@ public class ServerApiClient {
         return URLEncoder.encode(s, StandardCharsets.UTF_8);
     }
 
-    // DTO as you described
 
 }

@@ -22,7 +22,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         this.jwtService = jwtService;
     }
 
-    // Skip login endpoints entirely
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getServletPath();
@@ -33,26 +32,19 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
             throws ServletException, IOException {
 
-        // If already authenticated, don't overwrite (important when you add more auth mechanisms later)
         if (SecurityContextHolder.getContext().getAuthentication() != null) {
             chain.doFilter(req, res);
             return;
         }
 
         String auth = req.getHeader(HttpHeaders.AUTHORIZATION);
-//        if (auth == null || !auth.startsWith("Bearer ")) {
-//            chain.doFilter(req, res);
-//            return;
-//        }
-
         String token = auth.substring(7);
 
         try {
-            // MUST validate signature + exp + issuer inside this method.
             io.jsonwebtoken.Claims claims = jwtService.parseClaims(token);
 
-            String typ = claims.get("typ", String.class); // "node" or "user"
-            String subject = claims.getSubject();         // nodeId or username
+            String typ = claims.get("typ", String.class);
+            String subject = claims.getSubject();
 
             if (typ == null || subject == null || subject.isBlank()) {
                 res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -60,22 +52,20 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             }
 
             if ("node".equals(typ)) {
-                // Node identity = JWT subject
                 SecurityContextHolder.getContext().setAuthentication(new NodeAuthentication(subject));
                 chain.doFilter(req, res);
                 return;
             }
 
             if (typ.contains("user") || typ.contains("admin")) {
-                // User role is required to authorize /admin/** etc.
-                Object role = claims.get("role", Object.class); // e.g. "ADMIN"
+                Object role = claims.get("role", Object.class);
                 if (role == null) {
                     res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     return;
                 }
 
                 var authToken = new UsernamePasswordAuthenticationToken(
-                        subject, // principal (username or userId)
+                        subject,
                         null,
                         List.of(new SimpleGrantedAuthority("ROLE_" + role))
                 );
@@ -85,10 +75,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 return;
             }
 
-            // Unknown token type
             res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         } catch (Exception ex) {
-            // invalid/expired token
             res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
     }

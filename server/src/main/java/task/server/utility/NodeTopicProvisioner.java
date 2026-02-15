@@ -39,15 +39,13 @@ public class NodeTopicProvisioner {
                 .map(n -> new NewTopic(topicName(n.getNodeId()), partitions, replicationFactor))
                 .toList();
 
-        // This is idempotent: existing topics won't fail the app, Kafka just ignores/returns already-exists.
-        kafkaAdmin.createOrModifyTopics(topics.toArray(NewTopic[]::new));
+         kafkaAdmin.createOrModifyTopics(topics.toArray(NewTopic[]::new));
     }
 
     private String topicName(String nodeId) {
         if (nodeId == null || nodeId.isBlank()) {
             throw new IllegalStateException("Active node has empty nodeId");
         }
-        // Kafka topic name constraints. Keep it simple + safe:
         String safe = nodeId.trim().replaceAll("[^a-zA-Z0-9._-]", "_");
         return TOPIC_PREFIX + safe;
     }

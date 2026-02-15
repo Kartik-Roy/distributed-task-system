@@ -48,17 +48,9 @@ CREATE TABLE IF NOT EXISTS `user` (
   UNIQUE KEY `uk_user_username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- =============================================================
--- 4. USER_SEQ — Hibernate sequence for user ID generation
--- =============================================================
-CREATE TABLE IF NOT EXISTS `user_seq` (
-  `next_val` BIGINT DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+-- NOTE: Hibernate auto-creates a `user_seq` table at runtime for
+-- User ID generation (@GeneratedValue). No DDL needed here.
 
--- Initialize sequence if empty
-INSERT INTO `user_seq` (`next_val`)
-SELECT 1 FROM DUAL
-WHERE NOT EXISTS (SELECT 1 FROM `user_seq`);
 
 -- =============================================================
 -- SAMPLE DATA (matches your current database)

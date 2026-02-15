@@ -32,12 +32,10 @@ public class KafkaConsumerConfig {
         cfg.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         cfg.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 
-        // consumer group per node so you can scale node horizontally later
         cfg.put(ConsumerConfig.GROUP_ID_CONFIG, "worker-" + nodeId);
 
         cfg.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
-        // Keep it simple for now. Later you can manage manual ack.
         cfg.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true);
 
         return new DefaultKafkaConsumerFactory<>(cfg);

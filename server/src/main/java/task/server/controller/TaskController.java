@@ -24,9 +24,14 @@ public class TaskController {
         return taskService.getTaskByTaskId(taskId);
     }
 
-    @GetMapping("/getAllForNode")
-    public ResponseEntity<?> getAllTaskForNode(){
-        return taskService.getAllTaskForNode();
+    @GetMapping("/user/getAllForNode")
+    public ResponseEntity<?> userGetAllTaskForNode(@RequestParam String nodeId){
+        return taskService.userGetAllTaskForNode(nodeId);
+    }
+
+    @GetMapping("/node/getAllForNode")
+    public ResponseEntity<?> nodeGetAllTaskForNode(){
+        return taskService.nodeGetAllTaskForNode();
     }
 
     @PutMapping("/reassignTask")

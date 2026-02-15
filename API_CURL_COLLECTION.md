@@ -184,6 +184,28 @@ OK
 
 ---
 
+### 2.6 Get All Tasks for a Specific Node (Admin)
+
+```bash
+curl -X GET "http://localhost:8080/task/user/getAllForNode?nodeId=3" \
+  -H "Authorization: Bearer <ADMIN_TOKEN>"
+```
+
+**Response:**
+```json
+[
+  {
+    "taskId": "07ab191c-057d-4331-a3a4-e6246f4ff2650",
+    "taskType": "DATA_EXPORT",
+    "taskDetails": "comp1",
+    "assignedNodeId": "3",
+    "status": "pending"
+  }
+]
+```
+
+---
+
 ## 3. Task Operations (Node — requires Node JWT)
 
 ### 3.1 Get Task by Task ID (Node-scoped)
@@ -221,8 +243,10 @@ curl -X GET "http://localhost:8080/task/getByTaskId?taskId=07ab191c-057d-4331-a3
 
 ### 3.2 Get All Tasks for This Node
 
+> Returns all tasks assigned to the requesting node (node ID extracted from JWT).
+
 ```bash
-curl -X GET http://localhost:8080/task/getAllForNode \
+curl -X GET http://localhost:8080/task/node/getAllForNode \
   -H "Authorization: Bearer <NODE_TOKEN>"
 ```
 
@@ -370,7 +394,7 @@ NODE_TOKEN=$(curl -s -X POST http://localhost:8080/auth/login/node \
   -d '{"nodeId":"3","nodeSecret":"node2Secret"}' | jq -r '.accessToken')
 
 # Step 4: Fetch tasks for node 3
-curl -s -X GET http://localhost:8080/task/getAllForNode \
+curl -s -X GET http://localhost:8080/task/node/getAllForNode \
   -H "Authorization: Bearer $NODE_TOKEN" | jq .
 
 # Step 5: Update status to in_progress

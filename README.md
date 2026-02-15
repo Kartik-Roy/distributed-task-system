@@ -120,7 +120,8 @@ To run multiple workers, change the `nodeId` and `nodeSecret` for each instance.
 | `POST` | `/auth/login/node` | None | Node login → JWT |
 | `POST` | `/task/create` | Admin JWT | Create a new task assigned to a node |
 | `GET` | `/task/getByTaskId?taskId=` | Node JWT | Get task (only if assigned to requesting node) |
-| `GET` | `/task/getAllForNode` | Node JWT | Get all tasks assigned to requesting node |
+| `GET` | `/task/user/getAllForNode?nodeId=` | Admin JWT | Get all tasks for a specific node (admin view) |
+| `GET` | `/task/node/getAllForNode` | Node JWT | Get all tasks assigned to requesting node |
 | `PUT` | `/task/updateStatus?taskId=&oldStatus=&newStatus=` | Node JWT | Update task status (idempotent) |
 | `PUT` | `/task/reassignTask?taskId=&nodeId=` | Admin JWT | Reassign a single task to another node |
 | `PUT` | `/task/reassignAllForNode?oldNodeId=&newNodeId=` | Admin JWT | Reassign all non-completed tasks |
